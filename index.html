@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Workflows — Adventure the World Travels</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #1e2a3a;
+      --navy-mid:  #2a3a4e;
+      --navy-soft: #3a4f66;
+      --gold:      #c9962a;
+      --gold-lt:   #e8b84b;
+      --cream:     #f7f5f0;
+      --cream-dk:  #edeae2;
+      --teal:      #3d9b80;
+      --teal-lt:   #5dbfa0;
+      --red:       #c0392b;
+      --text:      #1a1a1a;
+      --muted:     #666;
+      --border:    #d4d0c8;
+      --white:     #ffffff;
+      --radius:    10px;
+      --radius-sm: 6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--cream);
+    }
+
+    /* ── Topnav ── */
+    .topnav {
+      background: var(--navy);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--gold);
+    }
+    .topnav-brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .topnav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav-links a {
+      color: #a0b4c8;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s, color 0.15s;
+    }
+    .topnav-links a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .topnav-links a.active { background: var(--gold); color: var(--navy); }
+
+    /* ── Page header ── */
+    .page-header {
+      background: var(--navy);
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+    .page-header .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .page-header h1 {
+      font-size: 32px; font-weight: 700; color: #fff;
+      margin-bottom: 10px; line-height: 1.25;
+    }
+    .page-header p {
+      font-size: 15px; color: #8aa4bc; max-width: 620px;
+      margin: 0 auto; line-height: 1.7;
+    }
+
+    /* ── Layout ── */
+    .page-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Section ── */
+    .section { padding-top: 48px; }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 22px; font-weight: 700; color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .section-intro {
+      font-size: 14px; color: var(--muted); margin-bottom: 20px;
+      max-width: 680px; line-height: 1.7;
+    }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 40px 0 0;
+    }
+
+    /* ── Two-layer explainer ── */
+    .layer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .layer-card {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .layer-card-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .layer-card-title.l1 { color: var(--teal-lt); }
+    .layer-card-title.l2 { color: var(--gold); }
+    .layer-card ul { list-style: none; }
+    .layer-card ul li {
+      font-size: 13.5px; color: #b0c4d8;
+      padding: 5px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    }
+    .layer-card ul li:last-child { border-bottom: none; }
+
+    .manual-note {
+      background: rgba(201,150,42,0.1);
+      border: 1px solid rgba(201,150,42,0.3);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #7a5200;
+      line-height: 1.6;
+      margin-top: 16px;
+    }
+    .manual-note b { font-weight: 700; color: #5a3c00; }
+
+    /* ── Trip flow ── */
+    .trip-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      flex: 1;
+      min-width: 110px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 10px;
+      text-align: center;
+      position: relative;
+    }
+    .flow-step .fs-icon { font-size: 20px; margin-bottom: 4px; }
+    .flow-step .fs-label {
+      font-size: 12px; font-weight: 700; color: var(--navy);
+      display: block; margin-bottom: 3px;
+    }
+    .flow-step .fs-sub { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    .flow-step.auto-applies {
+      border-color: var(--teal);
+      background: #f0faf6;
+    }
+    .flow-step.auto-applies .fs-label { color: var(--teal); }
+    .flow-arrow {
+      display: flex; align-items: center;
+      padding: 0 4px; color: #bbb;
+      font-size: 18px; font-weight: 300;
+      flex-shrink: 0;
+    }
+
+    /* ── Workflow cards ── */
+    .wf-cards { display: flex; flex-direction: column; gap: 14px; }
+
+    .wf-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .wf-card-header {
+      background: var(--navy-mid);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .wf-card-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .wf-card-title-wrap { flex: 1; }
+    .wf-card-name {
+      font-size: 15px; font-weight: 700; color: #fff; line-height: 1.2;
+    }
+    .wf-card-trigger {
+      font-size: 11px; color: #7a9ab8; margin-top: 2px;
+    }
+    .wf-card-badge {
+      font-size: 10.5px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .badge-auto   { background: var(--teal); color: #fff; }
+    .badge-manual { background: var(--gold); color: var(--navy); }
+
+    .wf-card-body { padding: 16px 20px; }
+    .wf-card-desc {
+      font-size: 13.5px; color: var(--muted);
+      margin-bottom: 14px; line-height: 1.65;
+    }
+
+    /* tasks & automations columns */
+    .wf-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .wf-cols { grid-template-columns: 1fr; } }
+
+    .wf-col-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 8px; padding-bottom: 5px;
+      border-bottom: 1px solid var(--cream-dk);
+    }
+    .wf-items { list-style: none; }
+    .wf-items li {
+      font-size: 13px; color: var(--text);
+      padding: 5px 0;
+      border-bottom: 0.5px solid var(--cream-dk);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .wf-items li:last-child { border-bottom: none; }
+    .wf-items li .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 7px;
+    }
+    .dot-task  { background: var(--gold); }
+    .dot-auto  { background: var(--teal-lt); }
+
+    .wf-note {
+      margin-top: 12px;
+      background: #f0f6ff;
+      border-left: 3px solid #4a80c4;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 9px 12px;
+      font-size: 12.5px; color: #1a3a60; line-height: 1.6;
+    }
+    .wf-note b { font-weight: 700; }
+
+    .wf-question {
+      margin-top: 10px;
+      background: #fffbf0;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 9px 12px;
+      font-size: 12.5px; color: #5a4000; line-height: 1.6;
+    }
+    .wf-question b { font-weight: 700; }
+
+    /* ── Email section ── */
+    .email-group { margin-bottom: 28px; }
+    .email-group-title {
+      font-size: 13px; font-weight: 700; color: var(--navy);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .email-group-title span {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .eg-manual { background: #fef3dc; color: #8a5200; }
+    .eg-auto   { background: #dff4ee; color: #0a5c3c; }
+
+    .email-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .email-table thead th {
+      background: var(--navy-mid);
+      color: #8aa8c4;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      padding: 8px 12px; text-align: left;
+    }
+    .email-table thead th:first-child { border-radius: 7px 0 0 0; }
+    .email-table thead th:last-child  { border-radius: 0 7px 0 0; }
+    .email-table tbody tr:nth-child(even) td { background: #fafaf7; }
+    .email-table tbody td {
+      padding: 9px 12px;
+      border-bottom: 0.5px solid var(--cream-dk);
+      vertical-align: top;
+      background: var(--white);
+    }
+    .email-table tbody tr:last-child td { border-bottom: none; }
+    .email-table tbody tr:last-child td:first-child { border-radius: 0 0 0 7px; }
+    .email-table tbody tr:last-child td:last-child  { border-radius: 0 0 7px 0; }
+    .email-table td b { font-weight: 700; }
+    .email-table td .em-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+    /* ── Key rule callout ── */
+    .rule-box {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .rule-box-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .rule-list { list-style: none; }
+    .rule-list li {
+      font-size: 13.5px; color: #c0d0e0;
+      padding: 6px 0; border-bottom: 0.5px solid rgba(255,255,255,0.07);
+      display: flex; gap: 10px; align-items: flex-start; line-height: 1.55;
+    }
+    .rule-list li:last-child { border-bottom: none; }
+    .rule-list li b { color: #fff; }
+    .rule-num {
+      color: var(--gold); font-weight: 700; font-size: 12px;
+      flex-shrink: 0; min-width: 18px; margin-top: 1px;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .topnav { padding: 0 16px; height: auto; padding: 10px 16px; flex-direction: column; gap: 8px; }
+      .page-header { padding: 32px 20px; }
+      .page-header h1 { font-size: 24px; }
+      .page-wrap { padding: 0 16px 60px; }
+      .layer-grid { grid-template-columns: 1fr; }
+      .trip-flow { flex-direction: column; gap: 6px; }
+      .flow-arrow { transform: rotate(90deg); align-self: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="topnav">
+  <a href="index.html" class="topnav-brand">✈ ATTW · Tern Outline</a>
+  <div class="topnav-links">
+    <a href="index.html#statuses">Statuses</a>
+    <a href="index.html#settings">Settings</a>
+    <a href="index.html#library">Library</a>
+    <a href="index.html#forms">Forms</a>
+    <a href="index.html#emails">Emails</a>
+    <a href="workflows.html" class="active">Workflows</a>
+    <a href="index.html#wdw">WDW</a>
+    <a href="index.html#dcl">DCL</a>
+  </div>
+</nav>
+
+<!-- ── Page header ── -->
+<div class="page-header">
+  <div class="eyebrow">⚡ Your Workflow System</div>
+  <h1>How Your Workflows Work Together</h1>
+  <p>A plain-English guide to the two-layer workflow system, what each workflow does, when to apply it, and what happens automatically vs. what you do manually.</p>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════
+       SECTION: TWO LAYERS
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-eyebrow">The Big Picture</div>
+    <div class="section-title">Two Layers, Working Together</div>
+    <div class="section-intro">
+      Your entire workflow system is built in two layers. <strong>Layer 1 — All Trips</strong> workflows fire for every single client, every time, no matter the destination. <strong>Layer 2 — Trip Type</strong> workflows layer on top for cruises, Disney, FIT trips, and more. You never repeat universal steps inside a trip-specific workflow — Layer 1 already handles them.
+    </div>
+
+    <div class="layer-grid">
+      <div class="layer-card">
+        <div class="layer-card-title l1">Layer 1 — Every Trip</div>
+        <ul>
+          <li>01 &nbsp;All Trips: Inbound Leads</li>
+          <li>02 &nbsp;All Trips: Planning</li>
+          <li>03 &nbsp;All Trips: Payments</li>
+          <li>04 &nbsp;All Trips: Booked (Pre + Post)</li>
+        </ul>
+      </div>
+      <div class="layer-card">
+        <div class="layer-card-title l2">Layer 2 — Trip Type (runs alongside)</div>
+        <ul>
+          <li>🚢 &nbsp;Mass Market Cruise</li>
+          <li>🏰 &nbsp;Walt Disney World</li>
+          <li>🚢 &nbsp;Disney Cruise Line</li>
+          <li>🗺 &nbsp;FIT / Custom Itinerary</li>
+          <li>+ any future trip types</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="manual-note">
+      <b>Right now, most workflows are applied manually.</b> The goal is auto-apply within the next few weeks. In the meantime: when a trip moves to Planning, manually apply the relevant Layer 2 workflow. When a trip is marked Booked, All Trips: Payments and All Trips: Booked will apply automatically.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SECTION: TRIP FLOW
+  ══════════════════════════════════ -->
+  <hr class="divider">
+  <div class="section">
+    <div class="section-eyebrow">Trip Lifecycle</div>
+    <div class="section-title">How a Trip Moves Through the System</div>
+    <div class="section-intro">
+      From the first inquiry to the 6-month follow-up — here's every stage, what triggers, and what you do.
+    </div>
+
+    <div class="trip-flow">
+      <div class="flow-step">
+        <div class="fs-icon">📋</div>
+        <span class="fs-label">Inquiry Form</span>
+        <div class="fs-sub">Client submits → Tern creates contact + trip as New Lead</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="fs-icon">🌱</div>
+        <span class="fs-label">New Lead</span>
+        <div class="fs-sub">Apply Inbound Leads workflow. Discovery call. Send recap + agreement.</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="fs-icon">🗺</div>
+        <span class="fs-label">Planning</span>
+        <div class="fs-sub">Apply Planning workflow (auto) + Layer 2 trip-type workflow.</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="fs-icon">📄</div>
+        <span class="fs-label">Proposal Sent</span>
+        <div class="fs-sub">Send proposal email with Tern link. Follow up in 3–5 days.</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step auto-applies">
+        <div class="fs-icon">✅</div>
+        <span class="fs-label">Booked</span>
+        <div class="fs-sub">Payments + Booked workflows apply automatically.</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="fs-icon">✈️</div>
+        <span class="fs-label">Pre-Travel → Travel</span>
+        <div class="fs-sub">Bon Voyage auto at 48 hrs. FIT: Arrival check-in 2 days after start.</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="fs-icon">🏡</div>
+        <span class="fs-label">Welcome Home</span>
+        <div class="fs-sub">Survey at 2 days. 6-month follow-up at 180 days. Archive.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SECTION: ALL TRIPS WORKFLOWS
+  ══════════════════════════════════ -->
+  <hr class="divider">
+  <div class="section">
+    <div class="section-eyebrow">Layer 1</div>
+    <div class="section-title">All Trips Workflows — One by One</div>
+    <div class="section-intro">
+      Four workflows that run for every client. Each covers a distinct stage of the trip. Here's exactly what's inside each one.
+    </div>
+
+    <div class="wf-cards">
+
+      <!-- 01 Inbound Leads -->
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num">01</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">All Trips: Inbound Leads</div>
+            <div class="wf-card-trigger">Trigger: Trip status → New Lead</div>
+          </div>
+          <span class="wf-card-badge badge-manual">Apply Manually</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Walks you through the first contact with a new client — from scheduling a discovery call through sending the call recap and getting the agency agreement signed. Email notifications for this workflow are turned off so they don't fire unexpectedly.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span>Schedule discovery call</li>
+                <li><span class="dot dot-task"></span>Send call recap email (manual)</li>
+                <li><span class="dot dot-task"></span>Send agency client agreement + planning fee</li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span>Email notifications off for this workflow — you control all sends</li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>When does this fire?</b> The trigger is trip status = New Lead — not trip creation. This means it only fires when you intentionally move a trip to New Lead, giving you full control over timing.
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Planning -->
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num">02</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">All Trips: Planning</div>
+            <div class="wf-card-trigger">Trigger: Trip status → Planning</div>
+          </div>
+          <span class="wf-card-badge badge-auto">Auto-Applies ✓</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Fires as soon as the trip status changes to Planning — whether you drag the trip over in the pipeline view or change it from the dropdown. This is the workflow that kicks off active planning. The assumption here is that a trip moves to Planning because the client has signed the agreement and paid the planning fee.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span>Contact the DMC / preferred supplier</li>
+                <li><span class="dot dot-task"></span>Create and send the proposal</li>
+                <li><span class="dot dot-task"></span>Proposal follow-up if no response</li>
+                <li><span class="dot dot-task"></span>Proposal updates as needed</li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations (fire on their own)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span><strong>Immediately:</strong> Tern account setup email sent to client</li>
+                <li><span class="dot dot-auto"></span><strong>5 days later:</strong> Travel insurance introductory email</li>
+                <li><span class="dot dot-auto"></span><strong>When client clicks "Approve Itinerary":</strong> Proposal approved email fires (only if they click it — not if you approve on their behalf)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>Travel insurance email:</b> This is a tap on the shoulder, not a hard sell. It includes a line in bold that says a preliminary quote will be included with the proposal. It is not delivering the quote itself — just setting the expectation that insurance will be discussed.
+          </div>
+          <div class="wf-question">
+            <b>❓ Question for Christine:</b> When do you send a client their traveler profile form — name, address, travel preferences, passport info? This does not need to be automated. It can be manually attached to the proposal email or sent separately. Let us know your preference so we can add it to the right touchpoint.
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Payments -->
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num">03</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">All Trips: Payments</div>
+            <div class="wf-card-trigger">Trigger: Trip status → Booked</div>
+          </div>
+          <span class="wf-card-badge badge-auto">Auto-Applies ✓</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Fires as soon as a trip is marked Booked. Handles the entire payment lifecycle — from deposit through final payment. Because this is centralized here, you do not need payment reminder emails inside any trip-specific workflow (Disney, cruise, FIT). It's already covered.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span>Enter commission info with host agency</li>
+                <li><span class="dot dot-task"></span>Mark trip as booked in Tern</li>
+                <li><span class="dot dot-task"></span>Post-trip: verify commission has been received</li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations (fire on their own)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span><strong>10 days before payment due:</strong> Payment reminder email to client</li>
+                <li><span class="dot dot-auto"></span><strong>1 day before payment due:</strong> Final reminder email</li>
+                <li><span class="dot dot-auto"></span><strong>When client authorizes payment:</strong> Acknowledgment email — "I'll go ahead and pay this for you"</li>
+                <li><span class="dot dot-auto"></span>Supplier payment task fires alongside the 10-day reminder</li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>How Tern knows the payment dates:</b> Payment due dates live inside the booking or package record in Tern. This workflow watches those dates and fires the reminder emails automatically. Make sure dates are entered in Tern when you set up the booking.
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Booked Pre/Post -->
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num">04</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">All Trips: Booked (Pre + Post Travel)</div>
+            <div class="wf-card-trigger">Trigger: Trip status → Booked · Runs alongside all trip-type workflows</div>
+          </div>
+          <span class="wf-card-badge badge-auto">Auto-Applies ✓</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            The universal pre- and post-travel workflow. Trip-type agnostic — works the same whether the client is on a cruise, a Disney trip, or a custom FIT. When you apply a Disney Cruise, WDW, or FIT workflow, this one is already running alongside it. You never need to repeat these steps inside a trip-specific workflow.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span><strong>7 days after task creation:</strong> Add trip-specific tasks as needed — tickets, car rental, anything outside the standard list</li>
+                <li><span class="dot dot-task"></span><strong>10 days after trip ends:</strong> Review trip feedback</li>
+                <li><span class="dot dot-task"></span><strong>181 days after trip ends:</strong> Archive the trip</li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations — all Active ✓</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span><strong>48-Hour Bon Voyage</strong> — 2 days before trip starts. Tern app link, itinerary link, online check-in reminder. <span style="color:var(--teal);font-weight:600;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Welcome Home Survey</strong> — 2 days after trip ends. Feedback survey + photo request. <span style="color:var(--teal);font-weight:600;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>6-Month Post-Travel Check-In</strong> — 180 days after trip ends. Re-engagement email, plants the seed for the next trip. <span style="color:var(--teal);font-weight:600;">Active</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>Arrival Day Check-In has moved.</b> It now lives in the <strong>FIT Booked</strong> workflow (Active) rather than here, since it's most relevant for land-based independent travel. Cruise clients get the Bon Voyage and Welcome Home emails from this workflow.
+          </div>
+          <div class="wf-question">
+            <b>❓ Question for Christine:</b> Do you regularly schedule pre-travel calls with clients? If so, we can add an automated email 30 days out asking them to book time with you for a trip review call. Let us know and we'll build it.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /wf-cards -->
+
+    <!-- Key rule callout -->
+    <div class="rule-box" style="margin-top:24px;">
+      <div class="rule-box-title">The Golden Rule — What You Never Need to Repeat</div>
+      <ul class="rule-list">
+        <li>
+          <span class="rule-num">1</span>
+          <div><b>Commission tracking</b> is in All Trips: Payments. Don't add a GRASP task to your Disney or FIT workflow.</div>
+        </li>
+        <li>
+          <span class="rule-num">2</span>
+          <div><b>Payment reminders</b> (10-day, 1-day, authorization) are in All Trips: Payments. Trip-specific workflows don't need their own.</div>
+        </li>
+        <li>
+          <span class="rule-num">3</span>
+          <div><b>Bon Voyage, welcome home survey, and 6-month follow-up</b> are in All Trips: Booked. The Arrival Day Check-In lives in FIT Booked only. Never duplicate any of these in other trip-type workflows.</div>
+        </li>
+        <li>
+          <span class="rule-num">4</span>
+          <div><b>Pre-travel document wrap-up</b> (22 days out) is in All Trips: Booked. Your Disney and cruise workflows don't need their own version.</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       SECTION: LAYER 2 OVERVIEW
+  ══════════════════════════════════ -->
+  <hr class="divider">
+  <div class="section">
+    <div class="section-eyebrow">Layer 2</div>
+    <div class="section-title">Trip-Type Workflows — The Specialists</div>
+    <div class="section-intro">
+      Each trip-type workflow adds what's unique to that kind of trip. Apply the right one when the trip moves to Planning. They run alongside All Trips: Booked once the trip is marked Booked.
+    </div>
+
+    <div class="wf-cards">
+
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num" style="background:#5dbfa0; color:#fff;">⚓</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">06. Mass Market: Cruise Booked (TBB)</div>
+            <div class="wf-card-trigger">For: Royal Caribbean, Norwegian, Holland America, Princess, Celebrity, etc. · Auto-apply tag: Mass Market Cruise</div>
+          </div>
+          <span class="wf-card-badge badge-manual">Tag-Based Auto-Apply</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Based on the Travel Biz Boss workflow, modified to match your writing style and trimmed of tasks that don't apply to your process. Auto-applies when the <strong>Mass Market Cruise</strong> trip tag is added. Payment reminders and post-travel follow-up are handled by All Trips Payments and Booked — no duplication needed here.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span><strong>0 days after creation:</strong> Send deposit paid email</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Double-check automations — inactive/active and due dates</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Edit &amp; ACTIVATE Online Check-In Reminder</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Move trip to Booked status if not already done</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Edit &amp; ACTIVATE Initial Insurance Quote Automation (remove if N/A)</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Are there any special concerns / celebrations?</li>
+                <li><span class="dot dot-task"></span><strong>0 days:</strong> Review / Update Bon Voyage automation with destination-specific email</li>
+                <li><span class="dot dot-task"></span><strong>1 day after creation:</strong> Edit &amp; ACTIVATE Insurance before Final Payment Automation</li>
+                <li><span class="dot dot-task"></span><strong>135 days before trip:</strong> If you need to confirm transfers, ACTIVATE Flight Request Automation</li>
+                <li><span class="dot dot-task"></span><strong>72 days before trip:</strong> If VISA/ESTA required, edit &amp; ACTIVATE VISA Automation (remove — updated with agent below)</li>
+                <li><span class="dot dot-task"></span><strong>35 days before trip:</strong> Double-check all amenities are showing on the reservation</li>
+                <li><span class="dot dot-task"></span><strong>35 days before trip:</strong> Edit &amp; ACTIVATE Final Documents Automation</li>
+                <li><span class="dot dot-task"></span><strong>14 days before trip:</strong> Send Gift (do you send gifts?)</li>
+                <li><span class="dot dot-task"></span><strong>6 days after trip ends:</strong> Send Final Payment email (when paid in full)</li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span><strong>Initial Insurance Quote</strong> — 2 days after automation added <span style="color:#aaa;font-size:11px;">(Inactive — activate per task)</span></li>
+                <li><span class="dot dot-auto"></span><strong>160-Day Pre-Cruise</strong> — 160 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Insurance Prompt before Final</strong> — 120 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Communication before Your Trip</strong> — 80 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Flight Request Required?</strong> — 70 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Are any VISAs or ETAs required?</strong> — 65 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Visa + Health Email Draft</strong> — 65 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>80-Day Pre-Cruise</strong> (includes online check-in reminder) — 60 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Money Matters: Cruise Edition</strong> — 45 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Final Documents &amp; Itinerary Link</strong> — 33 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>30-Day Pre-Cruise</strong> — 30 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>What NOT to Bring on a Cruise</strong> — 25 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>On-Board Booking Prompt</strong> (remove if CARNIVAL) — 16 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Check-In Reminder</strong> — 10 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Bon Voyage: Cruise</strong> — 5 days before trip <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Welcome Home: Cruise</strong> (remove — lives in Booked workflow) — 2 days after trip ends <span style="color:#aaa;font-size:11px;">Inactive</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>Several tasks require your attention at booking time</b> — particularly activating the insurance, VISA, and flight request automations based on each client's situation. The task list walks you through exactly which ones to review and activate. The gift task (14 days before) should be removed if you don't send physical gifts.
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num" style="background:#8b5cf6; color:#fff;">🏰</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">Walt Disney World</div>
+            <div class="wf-card-trigger">For: WDW resort bookings — 91+ days and Close-In (90 days or less)</div>
+          </div>
+          <span class="wf-card-badge badge-manual">Apply at Planning</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Two workflows — one for standard bookings (91+ days out) and one for close-in bookings (90 days or less). Covers dining reservation reminders, MagicBand info, Lightning Lane strategy, and more. Full details in the WDW section.
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num" style="background:#e8772e; color:#fff;">🚢</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">Disney Cruise Line</div>
+            <div class="wf-card-trigger">For: Disney Wish, Fantasy, Dream, Wonder, Magic</div>
+          </div>
+          <span class="wf-card-badge badge-manual">Apply at Planning</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Covers what's unique to DCL — port adventure booking windows, adult dining options (via ship-specific Info Blocks in Tern), Navigator app setup, pre-cruise hotel stays, and online check-in. Full details in the DCL section.
+          </div>
+          <div class="wf-note">
+            <b>Tern library tip:</b> When you add a Disney Cruise from the Tern library, ship details including deck plans, dining, recreation, and kids clubs are added automatically. Adult dining specifics are handled via ship-specific Info Blocks so you don't need separate email variations per ship.
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-card">
+        <div class="wf-card-header">
+          <div class="wf-card-num" style="background:#2a7a5c; color:#fff;">🗺</div>
+          <div class="wf-card-title-wrap">
+            <div class="wf-card-name">FIT Booked</div>
+            <div class="wf-card-trigger">For: Independent travel, escorted tours, DMC-based itineraries · Trip tag: FIT</div>
+          </div>
+          <span class="wf-card-badge badge-manual">Apply at Planning</span>
+        </div>
+        <div class="wf-card-body">
+          <div class="wf-card-desc">
+            Covers everything unique to fully independent travel — final paperwork from suppliers, hotel confirmations, and a full pre-travel check-in sequence. This workflow is also where the <strong>Arrival Day Check-In</strong> now lives, as it's most relevant for land-based independent trips where local partners are on the ground.
+          </div>
+          <div class="wf-cols">
+            <div>
+              <div class="wf-col-label">Tasks (you do these)</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-task"></span><strong>35 days before trip:</strong> FIT | Request Final Paperwork from Suppliers <span style="color:var(--teal);font-size:11px;font-weight:600;">Email notification: On</span></li>
+                <li><span class="dot dot-task"></span><strong>22 days before trip:</strong> FIT | 15-Day Pre-Travel Documents &amp; Wrap-Up — Send Wrap-Up Form email <span style="color:#aaa;font-size:11px;">Notification: Off</span></li>
+                <li><span class="dot dot-task"></span><strong>7 days before trip:</strong> FIT | Send Hotel Booking Confirmations to Property (if necessary) <span style="color:#aaa;font-size:11px;">Notification: Off</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="wf-col-label">Automations — all Active ✓</div>
+              <ul class="wf-items">
+                <li><span class="dot dot-auto"></span><strong>90-Day Check-In</strong> — 90 days before trip starts. 1 email. Dining, spa, special experiences. <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>45-Day Check-In &amp; Profile Refresh</strong> — 45 days before trip starts. Profile update form — passport, loyalty numbers, emergency contacts. <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Arrival Day Check-In</strong> — 2 days after trip starts. "How's everything going? My local partners are there to assist." <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+                <li><span class="dot dot-auto"></span><strong>Agent: Visa + Health Email Draft</strong> — 7 days after trip status changes. 0 emails (internal agent task — prompts you to send visa/health info if applicable). <span style="color:var(--teal);font-weight:600;font-size:11px;">Active</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="wf-note">
+            <b>Arrival Day Check-In</b> was moved here from All Trips: Booked because the language about "local partners" is specific to FIT trips. Cruise clients don't need this message — they're already on the ship.
+          </div>
+          <div class="wf-question">
+            <b>❓ Question for Christine:</b> The 90-day check-in can include links for booking dining, spa, and additional tours/transfers (via Project Expedition or Viator). Do you offer these services for FIT clients? Your answer determines whether those links go into the form — let us know and we'll finalize it.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /wf-cards -->
+  </div>
+
+  <!-- ══════════════════════════════════
+       SECTION: EMAIL QUICK REF
+  ══════════════════════════════════ -->
+  <hr class="divider">
+  <div class="section">
+    <div class="section-eyebrow">Email Reference</div>
+    <div class="section-title">Manual Sends vs. Automations at a Glance</div>
+    <div class="section-intro">
+      Two types of emails live in your library. Manual sends you fire yourself at the right moment. Automations trigger on their own based on trip status or dates.
+    </div>
+
+    <div class="email-group">
+      <div class="email-group-title">
+        ✋ Manual Send Emails <span class="eg-manual">You decide when to send</span>
+      </div>
+      <table class="email-table">
+        <thead>
+          <tr>
+            <th style="width:5%">#</th>
+            <th style="width:32%">Template Name</th>
+            <th style="width:33%">Subject Line</th>
+            <th>When to Send</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><b>Next Steps — Planning Fee &amp; Trip Recap</b></td>
+            <td>Next Steps — Planning Fee &amp; Trip Recap</td>
+            <td>After every discovery call. Includes agency agreement + Stripe invoice language.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><b>Planning Fee / Agreement Confirmation</b></td>
+            <td>Paperwork Received — Let's Get Started!</td>
+            <td>When fee or signed agreement is received. Variable language for fee vs. agreement.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><b>Send Client Proposal</b></td>
+            <td>Your Custom Travel Proposal Is Ready!</td>
+            <td>When the proposal is ready. Includes Tern trip link.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><b>Proposal Follow-Up</b></td>
+            <td>Any Questions About Your Proposal?</td>
+            <td>3–5 days after proposal if no response.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><b>You're Booked</b></td>
+            <td>It's Official — You're Booked</td>
+            <td>After deposit is paid and booking is confirmed.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="email-group">
+      <div class="email-group-title">
+        ⚡ Automated Emails <span class="eg-auto">Trigger on their own</span>
+      </div>
+      <table class="email-table">
+        <thead>
+          <tr>
+            <th style="width:5%">#</th>
+            <th style="width:32%">Template Name</th>
+            <th style="width:30%">Trigger</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><b>Tern Account Setup</b></td>
+            <td>Immediately when Planning workflow is applied</td>
+            <td>Client creates their Tern account to view the itinerary.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><b>Travel Insurance — 1st Touchpoint</b></td>
+            <td>5 days after status → Planning</td>
+            <td>Tap on the shoulder. Not a quote — sets expectation that insurance will be discussed.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><b>Proposal Approved</b></td>
+            <td>Client clicks "Approve Itinerary" in Tern</td>
+            <td>Does NOT fire if you approve on their behalf. Client must click the button.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><b>Payment Reminder (10 days)</b></td>
+            <td>10 days before payment due date</td>
+            <td>Payment due date must be entered in the Tern booking record.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><b>Payment Reminder (1 day)</b></td>
+            <td>1 day before payment due date</td>
+            <td>Final nudge before payment is due.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><b>Payment Authorization Acknowledgment</b></td>
+            <td>Client authorizes payment</td>
+            <td>"Thank you — I'll go ahead and pay this."</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><b>90-Day Check-In</b> <em style="font-size:11px;color:var(--teal);">(FIT Booked workflow)</em></td>
+            <td>90 days before trip start</td>
+            <td>FIT trips only. Dining, spa, special experiences form. Active.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><b>45-Day Check-In &amp; Profile Refresh</b> <em style="font-size:11px;color:var(--teal);">(FIT Booked workflow)</em></td>
+            <td>45 days before trip start</td>
+            <td>FIT trips only. Profile update form — passport, contacts, loyalty numbers. Active.</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td><b>48-Hour Bon Voyage</b> <em style="font-size:11px;color:var(--teal);">(All Trips: Booked)</em></td>
+            <td>2 days before trip starts</td>
+            <td>All trip types. Tern app link + itinerary. Online check-in reminder. Active.</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td><b>Arrival Day Check-In</b> <em style="font-size:11px;color:var(--teal);">(FIT Booked workflow)</em></td>
+            <td>2 days after trip starts</td>
+            <td>FIT trips only. "How's everything? My local partners are there to assist." Active.</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td><b>Agent: Visa + Health Email Draft</b> <em style="font-size:11px;color:var(--teal);">(FIT Booked workflow)</em></td>
+            <td>7 days after trip status changes</td>
+            <td>Internal agent task only (0 emails to client). Prompts you to send visa/health info if applicable. Active.</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td><b>Welcome Home Survey</b> <em style="font-size:11px;color:var(--teal);">(All Trips: Booked)</em></td>
+            <td>2 days after trip ends</td>
+            <td>All trip types. Feedback survey + photo request. Active.</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td><b>6-Month Post-Travel Check-In</b> <em style="font-size:11px;color:var(--teal);">(All Trips: Booked)</em></td>
+            <td>180 days after trip ends</td>
+            <td>All trip types. "Can you believe it's been 6 months?" Re-engagement. Active.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div><!-- /page-wrap -->
+
+<div class="page-footer">
+  Adventure the World Travels · Tern Workflow Reference · Built for Christine Scheeler<br>
+  Questions? Reach out to Katharina before making changes to the master workflow library.
+</div>
+
+</body>
+</html>
