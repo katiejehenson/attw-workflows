@@ -37,40 +37,6 @@
       background: var(--cream);
     }
 
-    /* ── Topnav ── */
-    .topnav {
-      background: var(--navy);
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 52px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 2px solid var(--gold);
-    }
-    .topnav-brand {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-decoration: none;
-    }
-    .topnav-links { display: flex; gap: 6px; flex-wrap: wrap; }
-    .topnav-links a {
-      color: #a0b4c8;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-      transition: background 0.15s, color 0.15s;
-    }
-    .topnav-links a:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .topnav-links a.active { background: var(--gold); color: var(--navy); }
-
     /* ── Page header ── */
     .page-header {
       background: var(--navy);
@@ -335,6 +301,51 @@
       flex-shrink: 0; min-width: 18px; margin-top: 1px;
     }
 
+    /* ── Collapsible sections (Layer 1 & 2) ── */
+    details.section > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      transition: border-color 0.15s;
+    }
+    details.section > summary::-webkit-details-marker { display: none; }
+    details.section > summary:hover { border-color: var(--gold); }
+    details.section > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    details.section > summary .section-title { margin-bottom: 0; }
+    details.section > summary .section-intro { margin: 6px 0 0; }
+    .summary-toggle {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; color: var(--navy-soft);
+      white-space: nowrap;
+    }
+    .summary-toggle .chev {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--navy); color: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; line-height: 1;
+      transition: transform 0.2s;
+    }
+    details.section[open] > summary .chev { transform: rotate(180deg); }
+    details.section .toggle-closed { display: inline; }
+    details.section .toggle-open   { display: none; }
+    details.section[open] .toggle-closed { display: none; }
+    details.section[open] .toggle-open   { display: inline; }
+    .collapsible-body { padding-top: 20px; }
+    @media (prefers-reduced-motion: reduce) {
+      .summary-toggle .chev, details.section > summary { transition: none; }
+    }
+    @media (max-width: 640px) {
+      .summary-toggle .toggle-closed, .summary-toggle .toggle-open { display: none !important; }
+    }
+
     /* ── Footer ── */
     .page-footer {
       margin-top: 60px;
@@ -347,7 +358,6 @@
 
     /* ── Responsive ── */
     @media (max-width: 640px) {
-      .topnav { padding: 0 16px; height: auto; padding: 10px 16px; flex-direction: column; gap: 8px; }
       .page-header { padding: 32px 20px; }
       .page-header h1 { font-size: 24px; }
       .page-wrap { padding: 0 16px 60px; }
@@ -359,20 +369,6 @@
 </head>
 <body>
 
-<!-- ── Nav ── -->
-<nav class="topnav">
-  <a href="index.html" class="topnav-brand">✈ ATTW · Tern Outline</a>
-  <div class="topnav-links">
-    <a href="index.html#statuses">Statuses</a>
-    <a href="index.html#settings">Settings</a>
-    <a href="index.html#library">Library</a>
-    <a href="index.html#forms">Forms</a>
-    <a href="index.html#emails">Emails</a>
-    <a href="workflows.html" class="active">Workflows</a>
-    <a href="index.html#wdw">WDW</a>
-    <a href="index.html#dcl">DCL</a>
-  </div>
-</nav>
 
 <!-- ── Page header ── -->
 <div class="page-header">
@@ -480,12 +476,18 @@
        SECTION: ALL TRIPS WORKFLOWS
   ══════════════════════════════════ -->
   <hr class="divider">
-  <div class="section">
-    <div class="section-eyebrow">Layer 1</div>
-    <div class="section-title">All Trips Workflows — One by One</div>
-    <div class="section-intro">
-      Four workflows that run for every client. Each covers a distinct stage of the trip. Here's exactly what's inside each one.
-    </div>
+  <details class="section">
+    <summary>
+      <div>
+        <div class="section-eyebrow">Layer 1</div>
+      <div class="section-title">All Trips Workflows — One by One</div>
+      <div class="section-intro">
+        Four workflows that run for every client. Each covers a distinct stage of the trip. Here's exactly what's inside each one.
+      </div>
+      </div>
+      <span class="summary-toggle"><span class="toggle-closed">Show workflows</span><span class="toggle-open">Hide workflows</span><span class="chev" aria-hidden="true">▾</span></span>
+    </summary>
+    <div class="collapsible-body">
 
     <div class="wf-cards">
 
@@ -672,18 +674,25 @@
       </ul>
     </div>
 
-  </div>
+      </div>
+  </details>
 
   <!-- ══════════════════════════════════
        SECTION: LAYER 2 OVERVIEW
   ══════════════════════════════════ -->
   <hr class="divider">
-  <div class="section">
-    <div class="section-eyebrow">Layer 2</div>
-    <div class="section-title">Trip-Type Workflows — The Specialists</div>
-    <div class="section-intro">
-      Each trip-type workflow adds what's unique to that kind of trip. Apply the right one when the trip moves to Planning. They run alongside All Trips: Booked once the trip is marked Booked.
-    </div>
+  <details class="section">
+    <summary>
+      <div>
+        <div class="section-eyebrow">Layer 2</div>
+      <div class="section-title">Trip-Type Workflows — The Specialists</div>
+      <div class="section-intro">
+        Each trip-type workflow adds what's unique to that kind of trip. Apply the right one when the trip moves to Planning. They run alongside All Trips: Booked once the trip is marked Booked.
+      </div>
+      </div>
+      <span class="summary-toggle"><span class="toggle-closed">Show workflows</span><span class="toggle-open">Hide workflows</span><span class="chev" aria-hidden="true">▾</span></span>
+    </summary>
+    <div class="collapsible-body">
 
     <div class="wf-cards">
 
@@ -825,7 +834,8 @@
       </div>
 
     </div><!-- /wf-cards -->
-  </div>
+      </div>
+  </details>
 
   <!-- ══════════════════════════════════
        SECTION: EMAIL QUICK REF
